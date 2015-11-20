@@ -12,9 +12,12 @@
             margin: 10px;
         }
         .monthBars{
-            fill :rgb(100,200,200);
+            fill :#7b6888;
         }
 
+        .arc path {
+            stroke: #fff;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
@@ -36,6 +39,8 @@
 <div class="divClass">
     <h2>Flu Trends Map</h2>
     <svg width="600" height="400" id="map">
+        <path id="states"></path>
+        <g id="points"></g>
     </svg>
 </div>
 

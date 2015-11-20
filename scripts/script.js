@@ -8,19 +8,24 @@ const YEAR_END = 2014;
 
 var yearsData = {};
 var seasonsData;
-var statesData;
+var statesData = [];
 var regionsData;
 var monthsData = {};
 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var selectedStates = ['Arizona','California','Colorado','Utah'];
+var statesFluAggregate =[];
 
 function loadData() {
+    for(var k=0;k<selectedStates.length;k++)
+        statesFluAggregate[k]=0;
     queue()
         .defer(d3.csv,DATA_FILENAME,function(d) {
+            //console.log(d);
             var sumPerRecord = 0;
             var currentDate;
-
             sumPerRecord = 0;
             currentDate = "";
+            var itr=0;
                 for(var key in d){
                     if(d.hasOwnProperty(key)){
                         if((key == 'Date') )
@@ -29,8 +34,18 @@ function loadData() {
                             if(key!="United States")
                                 sumPerRecord+= parseInt(d[key]);
                     }
+
+
+
+
+                    if(selectedStates.indexOf(key)>-1){
+                        statesFluAggregate[itr]+= parseInt(d[key]);
+                        itr++;
+                    }
                 }
             yearsData[currentDate]=sumPerRecord;
+
+
         })
         .await(loadMonthData);
 }
@@ -38,6 +53,7 @@ function loadData() {
 
 //returns month wise data for the given year
 function loadMonthData() {
+    console.log(yearsData);
     var year ="";
     var currentMonthData = [];
     for(var j=YEAR_START;j<=YEAR_END;j++){
@@ -56,10 +72,20 @@ function loadMonthData() {
         monthsData[year] = currentMonthData;
         currentMonthData = [];
     }
-    console.log(monthsData);
+    for(var k=0;k<selectedStates.length;k++){
+        var obj ={};
+        obj['state'] = selectedStates[k];
+        obj['aggregate'] = statesFluAggregate[k];
+        statesData.push(obj);
+    }
+    //console.log(statesData);
+
     updateMonthBarChart("2009");
+    updatePieChart();
+
 }
 
+//updates monthly bar chart
 function updateMonthBarChart(year) {
 
     var margin ={top:30, right:30, bottom:30, left:40},
@@ -140,10 +166,48 @@ function updateMonthBarChart(year) {
         .remove();
 }
 
+function updatePieChart(){
+    var width = 600,
+        height = 400,
+        radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.ordinal()
+        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b"]);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+    var pieLayout = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d.aggregate; });
+
+    var pieChartSVG = d3.select("#pieChart")
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var gObj = pieChartSVG.selectAll(".arc")
+        .data(pieLayout(statesData))
+        .enter().append("g")
+        .attr("class", "arc");
+
+    gObj.append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color(d.data.aggregate); });
+
+    gObj.append("text")
+        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .style("text-anchor", "middle")
+        .text(function(d) { return d.data.state; });
+}
+//called on slider event
 function updateCharts(year){
     $('#yearSpan').text(year);
     updateMonthBarChart(year);
 }
+
+
 
 
 
