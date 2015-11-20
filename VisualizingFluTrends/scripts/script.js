@@ -3,17 +3,20 @@
  */
 
 const DATA_FILENAME = "data/flu_trends_data.csv";
+const MAPDATA_FILENAME = "data/us.json"
 const YEAR_START = 2004;
 const YEAR_END = 2014;
 
 var yearsData = {};
 var seasonsData;
 var statesData = [];
+var yearStatesData = {};
 var regionsData;
 var monthsData = {};
 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var selectedStates = ['Arizona','California','Colorado','Utah'];
 var statesFluAggregate =[];
+var colorScale;
 
 function loadData() {
     for(var k=0;k<selectedStates.length;k++)
@@ -25,6 +28,7 @@ function loadData() {
             var currentDate;
             sumPerRecord = 0;
             currentDate = "";
+            var currentYear = d["Date"].substring(d["Date"].lastIndexOf("/")+1);
             var itr=0;
                 for(var key in d){
                     if(d.hasOwnProperty(key)){
@@ -41,12 +45,20 @@ function loadData() {
                 }
             yearsData[currentDate]=sumPerRecord;
         })
+        .defer(d3.json, MAPDATA_FILENAME)
         .await(loadMonthData);
 }
 
 
 //returns month wise data for the given year
-function loadMonthData() {
+function loadMonthData(error, yearData, usStateData) {
+
+    if(error) {
+        throw error;
+    }
+    console.log(usStateData);
+    drawMap(usStateData);
+
     console.log(yearsData);
     var year ="";
     var currentMonthData = [];
@@ -77,6 +89,25 @@ function loadMonthData() {
     updateMonthBarChart("2009");
     updatePieChart();
 
+}
+
+function drawMap(usStateData) {
+
+    /*colorScale = d3.scale.ordinal()
+     .domain(selectedSeries, function (d) {
+     return d.attendance;
+     })
+     .range(["#a1d99b", "#31a354"]);*/
+
+    var map = d3.select("#map");
+    var states = d3.selectAll("#states");
+    var projection = d3.geo.albersUsa()
+        .scale(800)
+        .translate([300, 200]);
+    var path = d3.geo.path().projection(projection);
+    var selection = states.datum(topojson.feature(usStateData, usStateData.objects.states))
+        .attr("d", path)
+        .style("fill", "red");
 }
 
 //updates monthly bar chart
