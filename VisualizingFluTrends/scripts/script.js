@@ -34,18 +34,12 @@ function loadData() {
                             if(key!="United States")
                                 sumPerRecord+= parseInt(d[key]);
                     }
-
-
-
-
                     if(selectedStates.indexOf(key)>-1){
                         statesFluAggregate[itr]+= parseInt(d[key]);
                         itr++;
                     }
                 }
             yearsData[currentDate]=sumPerRecord;
-
-
         })
         .await(loadMonthData);
 }
