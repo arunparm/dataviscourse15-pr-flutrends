@@ -330,8 +330,11 @@ function draw() {
         })
         .on("click", function(d) {
             year  = document.getElementById("year").value;
-            //this.setAttribute("style", "stroke:#ff3036; fill:" + colorScale(d["Value"][parseInt(year)]));
-            this.setAttribute("style", "");
+            if(this.style.fill != "white") {
+                this.style.fill = "white";
+            }
+            else
+                this.style.fill = colorScale(d["Value"][parseInt(year)]);
             alert(d.n + " was clicked");
         });
 }
