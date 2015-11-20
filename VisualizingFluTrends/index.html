@@ -68,6 +68,12 @@
             stroke: #a9a9a9;
             stroke-width: 1;
         }
+
+        #year {
+            font-weight: bold;
+            font-size: larger;
+            vertical-align: top;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
@@ -85,7 +91,7 @@
 
 <span id="info">Info span</span>
 <br/>
-<input id="year" type="range" min="2003" max="2015" oninput="updateCharts(value)">
+<input id="year" type="range" min="2004" max="2014" oninput="updateCharts(value)"><span id="yearSpan">2009</span>
 <br />
 <div class="divClass">
     <h2>Flu Trends Map</h2>
@@ -108,7 +114,7 @@
 </div>
 
 <div class="divClass">
-    <h2>Flu Trends : Monthly Report (<span id="yearSpan">2009</span>)</h2>
+    <h2>Flu Trends : Monthly Report</h2>
     <svg width="600" height="400" id="monthBarChart" >
         <g id="xAxis" transform="translate(40,345) scale(1,1)"></g>
         <g id="yAxis" transform="translate(80,50) scale(1,1)"></g>
