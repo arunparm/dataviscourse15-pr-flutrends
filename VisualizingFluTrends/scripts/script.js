@@ -3,7 +3,7 @@
  */
 
 const DATA_FILENAME = "data/flu_trends_data - 2003.csv";
-const MAPDATA_FILENAME = "data/us.json"
+const MAPDATA_FILENAME = "data/us.json";
 const YEAR_START = 2004;
 const YEAR_END = 2014;
 
@@ -14,31 +14,43 @@ var yearStatesData = {};
 var regionsData;
 var monthsData = {};
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-var selectedStates = ['Arizona', 'California', 'Colorado', 'Utah'];
+var selectedStates = [];
 var statesFluAggregate = [];
 var colorScale;
 var stateCodes = {};
 var selectedYear;
+var stateIdNameMap = {};
+var mapData = [];
 
 function loadData() {
 
     for (var k = 0; k < selectedStates.length; k++)
         statesFluAggregate[k] = 0;
 
-    for (var i = 0; i < uStatePaths.length; i++) {
-        uStatePaths[i]["Value"] = {};
-        yearStatesData[uStatePaths[i]["n"]] = {}
-        for (var j = YEAR_START; j <= YEAR_END; j++) {
-            uStatePaths[i]["Value"][j] = 0;
-            yearStatesData[uStatePaths[i]["n"]][j] = 0;
-        }
-    }
-
     d3.csv("data/us_state_codes.csv", function (d) {
         d.forEach(function (kvp) {
             stateCodes[kvp.Code] = kvp.State;
         });
     });
+
+    d3.tsv("data/us-state-names.tsv", function (d) {
+        d.forEach(function (key) {
+            stateIdNameMap[key.id] = [key.code, key.name];
+        });
+
+        for (var i = 1; i <= 78; i++) {
+            //uStatePaths[i]["Value"] = {};
+            //yearStatesData[uStatePaths[i]["n"]] = {}
+            if (stateIdNameMap[i] != undefined) {
+                yearStatesData[stateIdNameMap[i][1]] = {};
+                for (var j = YEAR_START; j <= YEAR_END; j++) {
+                    //uStatePaths[i]["Value"][j] = 0;
+                    yearStatesData[stateIdNameMap[i][1]][j] = 0;
+                }
+            }
+        }
+    });
+
 
     queue()
         .defer(d3.csv, DATA_FILENAME, function (d) {
@@ -75,6 +87,7 @@ function loadData() {
             yearsData[currentDate] = sumPerRecord;
         })
         .defer(d3.json, MAPDATA_FILENAME)
+        //.defer(d3.tsv, "data/us-state-names.tsv")
         .await(loadMonthData);
 }
 
@@ -86,12 +99,20 @@ function loadMonthData(error, yearData, usStateData) {
         throw error;
     }
 
-    for (var key in uStatePaths) {
-        uStatePaths[key]["Value"] = yearStatesData[uStatePaths[key]["n"]];
-    }
+    mapData = topojson.feature(usStateData, usStateData.objects.states).features;
+    mapData.forEach(function (d) {
+        var id = d.id;
+        d["StateName"] = stateIdNameMap[id][1];
+        d["StateCode"] = stateIdNameMap[id][0];
+        d["Value"] = yearStatesData[stateIdNameMap[id][1]];
+    });
 
-    //drawMap(usStateData);
-    draw();
+    /*for (var key in uStatePaths) {
+     uStatePaths[key]["Value"] = yearStatesData[uStatePaths[key]["n"]];
+     }*/
+
+    drawMap();
+    //draw();
 
     console.log(yearsData);
     var year = "";
@@ -125,13 +146,13 @@ function loadMonthData(error, yearData, usStateData) {
 
 }
 
-function drawMap(usStateData) {
-
-    /*colorScale = d3.scale.ordinal()
-     .domain(selectedSeries, function (d) {
-     return d.attendance;
-     })
-     .range(["#a1d99b", "#31a354"]);*/
+function drawMap() {
+    colorScale = d3.scale.ordinal()
+        .domain(mapData, function (d) {
+            year = document.getElementById("year").value;
+            return d["Value"][parseInt(year)];
+        })
+        .range(["#a1d99b", "#31a354"]);
 
     var map = d3.select("#map");
     var states = d3.selectAll("#states");
@@ -139,9 +160,74 @@ function drawMap(usStateData) {
         .scale(800)
         .translate([300, 200]);
     var path = d3.geo.path().projection(projection);
-    var selection = states.datum(topojson.feature(uStatePaths, usStateData.objects.states))
+
+    map.html("");
+
+    map.append("g")
+        .selectAll("path")
+        .data(mapData)
+        .enter()
+        .append("path")
         .attr("d", path)
-        .style("fill", "red");
+        .attr("stroke", "white")
+        .attr("class", "states")
+        .style("fill", function (d) {
+            year = document.getElementById("year").value;
+            if (d["Value"] != undefined)
+                return colorScale(d["Value"][parseInt(year)]);
+        })
+        .on("mouseover", function (d) {
+            year = document.getElementById("year").value;
+            d3.select("#tooltip")
+                .transition()
+                .duration(200)
+                .style("opacity", .9);
+
+            d3.select("#tooltip")
+                .html(showToolTip(d["StateName"], d["Value"][parseInt(year)]))
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function (d) {
+            d3.select("#tooltip")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
+        .on("click", function (d) {
+            year = document.getElementById("year").value;
+            if (this.style.fill != "white") {
+                this.style.fill = "white";
+                selectedStates[selectedStates.length] = d["StateName"];
+            }
+            else {
+                this.style.fill = colorScale(d["Value"][parseInt(year)]);
+                var index = selectedStates.indexOf(d["StateName"]);
+                selectedStates.splice(index, 1);
+            }
+            //alert(d["StateName"] + " was clicked");
+            console.log(selectedStates);
+            updatePieChart();
+        });
+
+    map.append("g")
+        .selectAll("text")
+        .data(mapData)
+        .enter()
+        .append("svg:text")
+        .text(function (d) {
+            return d["StateCode"];
+        })
+        .attr("x", function (d) {
+            if (d["StateName"] != "Puerto Rico" && d["StateName"] != "Virgin Islands of the United States")
+                return path.centroid(d)[0];
+        })
+        .attr("y", function (d) {
+            if (d["StateName"] != "Puerto Rico" && d["StateName"] != "Virgin Islands of the United States")
+                return path.centroid(d)[1];
+        })
+        .attr("text-anchor", "middle")
+        .attr('fill', 'red');
 }
 
 //updates monthly bar chart
@@ -276,15 +362,15 @@ function updateCharts(year) {
     selectedYear = year;
     $('#yearSpan').text(year);
     updateMonthBarChart(year);
-    draw();
+    drawMap();
 }
 
 function showToolTip(n, d) {
     /*return "<h4>" + n + "</h4><table>" +
-        "<tr><td>Flu Cases:</td><td>" + d + "</td></tr>" +
-        "</table>";*/
+     "<tr><td>Flu Cases:</td><td>" + d + "</td></tr>" +
+     "</table>";*/
 
-    return "<h4>" + n + "</h4> Flu Cases: "  + d;
+    return "<h4>" + n + "</h4> Flu Cases: " + d;
 }
 
 function draw() {
@@ -328,9 +414,9 @@ function draw() {
                 .duration(500)
                 .style("opacity", 0);
         })
-        .on("click", function(d) {
-            year  = document.getElementById("year").value;
-            if(this.style.fill != "white") {
+        .on("click", function (d) {
+            year = document.getElementById("year").value;
+            if (this.style.fill != "white") {
                 this.style.fill = "white";
             }
             else
