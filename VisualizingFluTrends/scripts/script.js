@@ -130,6 +130,17 @@ function loadData() {
                 }
                 regionsData[parseInt(currentDate.getYear() + 1900)] = regionsArr;
             }
+            else{
+                var arr = regionsData[[parseInt(currentDate.getYear() + 1900)]];
+                var count=0;
+                for(var key in d ){
+                    if(key!="Date"){
+                        arr[count] = parseInt(arr[count]) + parseInt(d[key]);
+                        count ++;
+                    }
+                }
+                regionsData[[parseInt(currentDate.getYear() + 1900)]] = arr;
+            }
         })
         //.defer(d3.tsv, "data/us-state-names.tsv")
         .await(loadMonthData);
@@ -193,7 +204,7 @@ function loadMonthData(error, yearData, usStateData) {
     d3.select("#year2").html(selectedYear);
     d3.select("#year3").html(selectedYear);
     d3.select("#year4").html(selectedYear);
-
+    console.log(regionsData);
 }
 
 function drawMap() {
