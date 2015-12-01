@@ -247,9 +247,9 @@ function drawMap() {
         .on("click", function (d) {
                 year = document.getElementById("year").value;
                 if (this.style.fill != "white") {
-                    this.style.fill = "white";
-                    selectedStates[selectedStates.length] = d["StateName"];
-                    if(selectedStates.length<=5){
+                    if(selectedStates.length<5){
+                        this.style.fill = "white";
+                        selectedStates[selectedStates.length] = d["StateName"];
                         seasonsSVG.html("");
                         selectedStatesSeasonData=[];
                         updateStackedChart(selectedYear,selectedStates);
@@ -574,11 +574,7 @@ function updateCharts(year) {
 
 }
 
-function showToolTip(n, d) {
-    /*return "<h4>" + n + "</h4><table>" +
-     "<tr><td>Flu Cases:</td><td>" + d + "</td></tr>" +
-     "</table>";*/
-
+function showToolTip(n, d){
     return "<h4>" + n + "</h4> Flu Cases: " + d;
 }
 
