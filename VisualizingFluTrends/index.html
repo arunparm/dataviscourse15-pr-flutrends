@@ -6,13 +6,26 @@
     <title>Flu Trends</title>
 
     <style>
+        body{
+            background-color: rgb(169,169,169);
+        }
+        h3{
+            font-family: "Arial Black", Gadget, sans-serif;
+            color: black;
+        }
+
+        h2{
+            font-family: "Arial Black", Gadget, sans-serif;
+            color: black;
+        }
         .divClass{
+            background-color: rgb(220,220,220);
             display: inline-block;
             border: 1px solid lightgray;
             margin: 10px;
         }
         .monthBars{
-            fill :#7b6888;
+            fill :rgb(49,130,189);
         }
 
         .arc path {
@@ -74,6 +87,17 @@
             font-size: larger;
             vertical-align: top;
         }
+
+        .axis line,
+        .axis path {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .axis--x path {
+            display: none;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
@@ -88,13 +112,12 @@
 
 <br/>
 <hr/>
-
-<span id="info">Info span</span>
+<h2 align="center">United States flu trends (2004 - 2014)</h2>
 <br/>
 <input id="year" type="range" min="2004" max="2014" oninput="updateCharts(value)"><span id="yearSpan">2009</span>
 <br />
 <div class="divClass">
-    <h2>Flu Trends Map</h2>
+    <h3>Flu Trends Map</h3>
     <div id="tooltip"></div>
     <svg width="600" height="400" id="map">
 
@@ -102,19 +125,22 @@
 </div>
 
 <div class="divClass">
-    <h2>Flu Trends : Aggregate</h2>
+    <h3>Flu Trends : Aggregate (<span id="year1"></span>)</h3>
     <svg  width="600" height="400" id="pieChart" >
     </svg>
 </div>
 
 <div class="divClass">
-    <h2>Flu Trends : Season</h2>
-    <svg width="600" height="400" id="seasons">
+    <h3>Flu Trends : Season (<span id="year2"></span>)</h3>
+    <svg width="600" height="400" id="seasonsChart">
+        <g id="xAxisSeasons" transform="translate(35,370) scale(1,1)"></g>
+        <g id="yAxisSeasons" transform="translate(40,20) scale(1,1)"></g>
+        <g id="seasonBars" transform="translate(40,415) scale(1,-1)"></g>
     </svg>
 </div>
 
 <div class="divClass">
-    <h2>Flu Trends : Monthly Report</h2>
+    <h3>Flu Trends : Monthly Report (<span id="year3"></span>)</h3>
     <svg width="600" height="400" id="monthBarChart" >
         <g id="xAxis" transform="translate(40,345) scale(1,1)"></g>
         <g id="yAxis" transform="translate(80,50) scale(1,1)"></g>

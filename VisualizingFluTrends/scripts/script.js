@@ -4,32 +4,34 @@
 
 const DATA_FILENAME = "data/flu_trends_data - 2003.csv";
 const MAPDATA_FILENAME = "data/us.json";
+const REGIONS_FILENAME = "data/flu_trends_data_regions.csv";
 const YEAR_START = 2004;
 const YEAR_END = 2014;
 
 var yearsData = {};
-var seasonsData;
+var seasonsData = {};
 var statesData = [];
 var yearStatesData = {};
 var regionsData;
 var monthsData = {};
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var selectedStates = [];
-var statesFluAggregate = [];
+var selectedCities = [];
+var statesFluAggregate = {};
 var colorScale;
 var stateCodes = {};
-var selectedYear;
+var selectedYear = "2009";
+var selectedStatesSeasonData = [];
 var stateIdNameMap = {};
 var mapData = [];
+var cities = {};
 
 function loadData() {
-
-    for (var k = 0; k < selectedStates.length; k++)
-        statesFluAggregate[k] = 0;
 
     d3.csv("data/us_state_codes.csv", function (d) {
         d.forEach(function (kvp) {
             stateCodes[kvp.Code] = kvp.State;
+            cities[kvp.State] = [];
         });
     });
 
@@ -56,6 +58,7 @@ function loadData() {
         .defer(d3.csv, DATA_FILENAME, function (d) {
             //console.log(d);
             var sumPerRecord = 0;
+            var currentYearSeasonData = [];
             var currentDate;
             sumPerRecord = 0;
             currentDate = "";
@@ -79,12 +82,35 @@ function loadData() {
                     if (stateName != undefined && yearStatesData[stateName].hasOwnProperty(parseInt(currentYear)))
                         yearStatesData[stateName][parseInt(currentYear)] += parseInt(d[key]);
                 }
-                if (selectedStates.indexOf(key) > -1) {
-                    statesFluAggregate[itr] += parseInt(d[key]);
-                    itr++;
+                if (key != "Date" && key != "United States") {
+                    if(typeof statesFluAggregate[key] === 'undefined')
+                        statesFluAggregate[key]=0;
+                    else
+                        statesFluAggregate[key] += parseInt(d[key]);
                 }
+
+                //**seasons data********
+
+                var currentPlace = {};
+                if(key !="Date" && key !="United States"){
+                    currentPlace['place'] = key;
+                    currentPlace['value'] = d[key];
+                    currentYearSeasonData.push(currentPlace);
+                }
+                //**********************
+
+                //****cities************
+                if(key.indexOf(',')>-1){
+                    var arr = key.split(", ");
+                    var currentCities = cities[stateCodes[arr[1]]];
+                    if(currentCities.indexOf(key)<0)
+                    currentCities.push(key);
+                    cities[arr[0]] = currentCities;
+                }
+                //**********************
             }
             yearsData[currentDate] = sumPerRecord;
+            seasonsData[currentDate] = currentYearSeasonData;
         })
         .defer(d3.json, MAPDATA_FILENAME)
         //.defer(d3.tsv, "data/us-state-names.tsv")
@@ -114,7 +140,7 @@ function loadMonthData(error, yearData, usStateData) {
     drawMap();
     //draw();
 
-    console.log(yearsData);
+    //console.log(yearsData);
     var year = "";
     var currentMonthData = [];
     for (var j = YEAR_START; j <= YEAR_END; j++) {
@@ -133,16 +159,20 @@ function loadMonthData(error, yearData, usStateData) {
         monthsData[year] = currentMonthData;
         currentMonthData = [];
     }
-    for (var k = 0; k < selectedStates.length; k++) {
+    //console.log(statesFluAggregate);
+    /*for (var k = 0; k < selectedStates.length; k++) {
         var obj = {};
         obj['state'] = selectedStates[k];
-        obj['aggregate'] = statesFluAggregate[k];
+        obj['aggregate'] = statesFluAggregate[selectedStates[k]];
         statesData.push(obj);
-    }
-    //console.log(statesData);
+    }*/
 
     updateMonthBarChart("2009");
-    updatePieChart();
+    updatePieChart(selectedStates);
+    updateStackedChart("2009",selectedStates);
+    d3.select("#year1").html(selectedYear);
+    d3.select("#year2").html(selectedYear);
+    d3.select("#year3").html(selectedYear);
 
 }
 
@@ -152,7 +182,7 @@ function drawMap() {
             year = document.getElementById("year").value;
             return d["Value"][parseInt(year)];
         })
-        .range(["#a1d99b", "#31a354"]);
+        .range(["rgb(49,130,189)", "rgb(158, 202, 225)"]);
 
     var map = d3.select("#map");
     var states = d3.selectAll("#states");
@@ -195,19 +225,31 @@ function drawMap() {
                 .style("opacity", 0);
         })
         .on("click", function (d) {
-            year = document.getElementById("year").value;
-            if (this.style.fill != "white") {
-                this.style.fill = "white";
-                selectedStates[selectedStates.length] = d["StateName"];
-            }
-            else {
-                this.style.fill = colorScale(d["Value"][parseInt(year)]);
-                var index = selectedStates.indexOf(d["StateName"]);
-                selectedStates.splice(index, 1);
-            }
-            //alert(d["StateName"] + " was clicked");
-            console.log(selectedStates);
-            updatePieChart();
+                year = document.getElementById("year").value;
+                if (this.style.fill != "white") {
+                    this.style.fill = "white";
+                    selectedStates[selectedStates.length] = d["StateName"];
+                    if(selectedStates.length<=5){
+                        seasonsSVG.html("");
+                        selectedStatesSeasonData=[];
+                        updateStackedChart(selectedYear,selectedStates);
+                        updatePieChart(selectedStates);
+                    }
+                    else{
+                        alert("Only 5 selections are allowed. Please deselect and try again.");
+                    }
+                }
+                else {
+                    this.style.fill = colorScale(d["Value"][parseInt(year)]);
+                    var index = selectedStates.indexOf(d["StateName"]);
+                    selectedStates.splice(index, 1);
+                    seasonsSVG.html("");
+                    selectedStatesSeasonData=[];
+                    updateStackedChart(selectedYear,selectedStates);
+                    updatePieChart(selectedStates);
+                }
+                //alert(d["StateName"] + " was clicked");
+                //console.log(selectedYear);
         });
 
     map.append("g")
@@ -227,7 +269,7 @@ function drawMap() {
                 return path.centroid(d)[1];
         })
         .attr("text-anchor", "middle")
-        .attr('fill', 'red');
+        .attr('fill', 'black');
 }
 
 //updates monthly bar chart
@@ -265,12 +307,8 @@ function updateMonthBarChart(year) {
         .orient("bottom");
 
     xAxisG
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.15em")
-        .attr("dy", ".02em")
-        .attr("transform", "rotate(-65)");
+        .attr("class", "axis axis--x")
+        .call(xAxis);
 
     var yAxisG = d3.select("#yAxis");
     var yScaleInverted = d3.scale.linear()
@@ -281,6 +319,7 @@ function updateMonthBarChart(year) {
         .scale(yScaleInverted)
         .orient("left");
     yAxisG
+        .attr("class", "axis axis--y")
         .call(yAxis);
 
 
@@ -314,13 +353,152 @@ function updateMonthBarChart(year) {
         .remove();
 }
 
-function updatePieChart() {
+//update stacked chart
+var seasonsSVG;
+function updateStackedChart(year, states){
+
+    getSelectedStatesSeasonData(year,states);
+    //console.log(selectedStatesSeasonData);
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+        width = 600 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width]);
+
+    var y = d3.scale.linear()
+        .rangeRound([height, 0]);
+
+    var z = d3.scale.category20c();
+
+
+    seasonsSVG = d3.select("#seasonsChart")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var seasons = ['winter','spring','summer','fall'];
+    var layers = d3.layout.stack()(seasons.map(function(c) {
+        return selectedStatesSeasonData.map(function(d) {
+            return {x: d['place'], y: d[c]};
+        });
+    }));
+
+    x.domain(layers[0].map(function(d) { return d.x; }));
+    y.domain([0, d3.max(layers[layers.length - 1], function(d) { return d.y0 + d.y; })]).nice();
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(d3.format(".2s"));
+
+    var layer = seasonsSVG.selectAll(".layer")
+        .data(layers)
+        .enter().append("g")
+        .attr("class", "layer")
+        .style("fill", function(d, i) { return z(i); });
+
+
+    layer.selectAll("rect")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("x", function(d) { return x(d.x); })
+        .attr("y", function(d) { return y(d.y + d.y0); })
+        .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
+        .attr("width", x.rangeBand() - 20)
+        .attr("transform", "translate(10)")
+        .on("click",function(d){
+            if(d['x'].indexOf(',') > -1){
+                seasonsSVG.html("");
+                selectedStatesSeasonData=[];
+                updateStackedChart(selectedYear,selectedStates);
+                updatePieChart(selectedStates);
+            }
+            else{
+                selectedCities = cities[d['x']];
+                seasonsSVG.html("");
+                selectedStatesSeasonData=[];
+                updateStackedChart(selectedYear,selectedCities);
+                updatePieChart(selectedCities);
+            }
+        });
+
+
+    var xAxisG = d3.select('#xAxisSeasons');
+    xAxisG
+        .attr("class", "axis axis--x")
+        .call(xAxis);
+
+    var yAxisG =  d3.select('#yAxisSeasons');
+    yAxisG
+        .attr("class", "axis axis--y")
+        .call(yAxis);
+
+}
+
+function getSelectedStatesSeasonData(year,states){
+
+    for(var j=0; j<states.length;j++){
+        var tempObj = {};
+        tempObj ['place'] = states[j];
+        tempObj ['winter'] = 0;
+        tempObj ['spring'] = 0;
+        tempObj ['summer'] = 0;
+        tempObj ['fall'] = 0;
+        selectedStatesSeasonData.push(tempObj);
+     }
+
+    //console.log(seasonsData);
+    for(var key in seasonsData){
+        if(key.indexOf(year)>-1){
+            var currentSet = seasonsData[key];
+            for(var i=0;i<currentSet.length;i++){
+                if(states.indexOf(currentSet[i]['place'])>-1){
+                    var currentDate = new Date(key);
+
+                    for(var k=0;k<selectedStatesSeasonData.length;k++){
+                        if(currentSet[i]['place'] == selectedStatesSeasonData[k]['place']){
+                            if(currentDate.getMonth()>=0 && currentDate.getMonth()<=2){
+                                selectedStatesSeasonData[k]['winter'] += parseInt(currentSet[i]['value']);
+                            }
+                            if(currentDate.getMonth()>=3 && currentDate.getMonth()<=5){
+                                selectedStatesSeasonData[k]['spring'] += parseInt(currentSet[i]['value']);
+                            }
+                            if(currentDate.getMonth()>=6 && currentDate.getMonth()<=8){
+                                selectedStatesSeasonData[k]['summer'] += parseInt(currentSet[i]['value']);
+                            }
+                            if(currentDate.getMonth()>=9 && currentDate.getMonth()<=11){
+                                selectedStatesSeasonData[k]['fall'] += parseInt(currentSet[i]['value']);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+var pieChartSVG;
+function updatePieChart(states) {
+    statesData = [];
+    for (var k = 0; k < states.length; k++) {
+        var obj = {};
+        obj['state'] = states[k];
+        obj['aggregate'] = statesFluAggregate[states[k]];
+        statesData.push(obj);
+    }
+    //console.log(statesData);
     var width = 600,
         height = 400,
         radius = Math.min(width, height) / 2;
 
-    var color = d3.scale.ordinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b"]);
+    var z = d3.scale.category20c();
 
     var arc = d3.svg.arc()
         .outerRadius(radius - 10)
@@ -332,7 +510,7 @@ function updatePieChart() {
             return d.aggregate;
         });
 
-    var pieChartSVG = d3.select("#pieChart")
+    pieChartSVG = d3.select("#pieChart")
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -343,9 +521,7 @@ function updatePieChart() {
 
     gObj.append("path")
         .attr("d", arc)
-        .style("fill", function (d) {
-            return color(d.data.aggregate);
-        });
+        .style("fill", function(d, i) { return z(i); });
 
     gObj.append("text")
         .attr("transform", function (d) {
@@ -362,7 +538,18 @@ function updateCharts(year) {
     selectedYear = year;
     $('#yearSpan').text(year);
     updateMonthBarChart(year);
+    selectedStatesSeasonData = [];
+    statesData = [];
+    seasonsSVG.html("");
+    pieChartSVG.html("");
+    //console.log(selectedStates);
+    updateStackedChart(year,selectedStates);
+    updatePieChart(selectedStates);
     drawMap();
+    d3.select("#year1").html(selectedYear);
+    d3.select("#year2").html(selectedYear);
+    d3.select("#year3").html(selectedYear);
+
 }
 
 function showToolTip(n, d) {
@@ -383,7 +570,7 @@ function draw() {
             year = document.getElementById("year").value;
             return d["Value"][parseInt(year)];
         })
-        .range(["#a1d99b", "#31a354"]);
+        .range(["rgb(49,130,189)", "rgb(158, 202, 225)"]);
 
     d3.select("#map").selectAll(".state")
         .data(uStatePaths)
