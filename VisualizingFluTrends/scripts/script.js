@@ -12,7 +12,7 @@ var yearsData = {};
 var seasonsData = {};
 var statesData = [];
 var yearStatesData = {};
-var regionsData;
+var regionsData = {};
 var monthsData = {};
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var selectedStates = [];
@@ -25,6 +25,7 @@ var selectedStatesSeasonData = [];
 var stateIdNameMap = {};
 var mapData = [];
 var cities = {};
+var regions = ['R1','R2','R3','R4','R5','R6','R7','R8','R9','R10'];
 
 function loadData() {
 
@@ -113,6 +114,23 @@ function loadData() {
             seasonsData[currentDate] = currentYearSeasonData;
         })
         .defer(d3.json, MAPDATA_FILENAME)
+        .defer(d3.csv, REGIONS_FILENAME, function (d){
+            var currentDate;
+            var regionsArr = [];
+            for(var key in d){
+                if(key =="Date")
+                    currentDate = new Date(d[key]);
+            }
+            if(regionsData[parseInt(currentDate.getYear() + 1900)] === undefined){
+                for(var key in d){
+                    if(key!="Date"){
+
+                        regionsArr.push(d[key]);
+                    }
+                }
+                regionsData[parseInt(currentDate.getYear() + 1900)] = regionsArr;
+            }
+        })
         //.defer(d3.tsv, "data/us-state-names.tsv")
         .await(loadMonthData);
 }
@@ -168,11 +186,13 @@ function loadMonthData(error, yearData, usStateData) {
     }*/
 
     updateMonthBarChart("2009");
+    updateRegionBarChart("2009");
     updatePieChart(selectedStates);
     updateStackedChart("2009",selectedStates);
     d3.select("#year1").html(selectedYear);
     d3.select("#year2").html(selectedYear);
     d3.select("#year3").html(selectedYear);
+    d3.select("#year4").html(selectedYear);
 
 }
 
@@ -287,7 +307,7 @@ function updateMonthBarChart(year) {
         return d;
     });
 
-    var xScale = d3.scale.ordinal().rangeRoundBands([textWidth, 400], .1);
+    var xScale = d3.scale.ordinal().rangeRoundBands([textWidth, 500], .1);
     xScale.domain(monthsData[year].map(function (d) {
         return d;
     }))
@@ -297,7 +317,7 @@ function updateMonthBarChart(year) {
         .nice();
 
 
-    var xAxisScale = d3.scale.ordinal().rangeRoundBands([textWidth, 400], .1);
+    var xAxisScale = d3.scale.ordinal().rangeRoundBands([textWidth, 500], .1);
     xAxisScale.domain(months.map(function (d) {
         return d;
     }))
@@ -346,14 +366,14 @@ function updateMonthBarChart(year) {
         .attr("height", function (d, i) {
             return yScale(d);
         })
-        .attr("width", 20);
+        .attr("width", 25);
 
     bars
         .exit()
         .remove();
 }
 
-//update stacked chart
+
 var seasonsSVG;
 function updateStackedChart(year, states){
 
@@ -533,11 +553,12 @@ function updatePieChart(states) {
             return d.data.state;
         });
 }
-//called on slider event
+
 function updateCharts(year) {
     selectedYear = year;
     $('#yearSpan').text(year);
     updateMonthBarChart(year);
+    updateRegionBarChart(year);
     selectedStatesSeasonData = [];
     statesData = [];
     seasonsSVG.html("");
@@ -549,6 +570,7 @@ function updateCharts(year) {
     d3.select("#year1").html(selectedYear);
     d3.select("#year2").html(selectedYear);
     d3.select("#year3").html(selectedYear);
+    d3.select("#year4").html(selectedYear);
 
 }
 
@@ -610,6 +632,86 @@ function draw() {
                 this.style.fill = colorScale(d["Value"][parseInt(year)]);
             alert(d.n + " was clicked");
         });
+}
+
+function updateRegionBarChart(year) {
+
+    var margin = {top: 30, right: 30, bottom: 30, left: 40},
+        width = 600 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+    var textHeight = 40;
+    var textWidth = 40;
+    var max = d3.max(regionsData[year], function (d) {
+        return d;
+    });
+    var min = d3.min(regionsData[year], function (d) {
+        return d;
+    });
+
+    var xScale = d3.scale.ordinal().rangeRoundBands([textWidth, 500], .1);
+    xScale.domain(regionsData[year].map(function (d) {
+        return d;
+    }))
+    var yScale = d3.scale.linear()
+        .domain([0, max])
+        .range([0, 300])
+        .nice();
+
+
+    var xAxisScale = d3.scale.ordinal().rangeRoundBands([textWidth, 500], .1);
+    xAxisScale.domain(regions.map(function (d) {
+        return d;
+    }))
+    var xAxisG = d3.select("#xAxisRegion");
+    var xAxis = d3.svg.axis()
+        .scale(xAxisScale)
+        .orient("bottom");
+
+    xAxisG
+        .attr("class", "axis axis--x")
+        .call(xAxis);
+
+    var yAxisG = d3.select("#yAxisRegion");
+    var yScaleInverted = d3.scale.linear()
+        .domain([max, 0])
+        .range([0, 300])
+        .nice();
+    var yAxis = d3.svg.axis()
+        .scale(yScaleInverted)
+        .orient("left");
+    yAxisG
+        .attr("class", "axis axis--y")
+        .call(yAxis);
+
+
+    var barchartG = d3.select("#regionBarChart")
+        .attr({
+            width: 600,
+            height: 400
+        })
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    var bars = d3.select("#regionBars")
+        .selectAll("rect")
+        .data(regionsData[year]);
+    bars
+        .enter()
+        .append("rect");
+    bars
+        .attr("x", function (d, i) {
+            return xScale(d);
+        })
+        .attr("y", margin.top + textHeight)
+        .attr("height", function (d, i) {
+            return yScaleInverted(d);
+        })
+        .attr("width", 25);
+
+    bars
+        .exit()
+        .remove();
 }
 
 

@@ -119,19 +119,25 @@
 <div class="divClass">
     <h3>Flu Trends Map</h3>
     <div id="tooltip"></div>
-    <svg width="600" height="400" id="map">
+    <svg width="600" height="415" id="map">
 
     </svg>
 </div>
 
 <div class="divClass">
     <h3>Flu Trends : Aggregate (<span id="year1"></span>)</h3>
-    <svg  width="600" height="400" id="pieChart" >
+    <svg  width="600" height="415" id="pieChart" >
     </svg>
 </div>
 
 <div class="divClass">
     <h3>Flu Trends : Season (<span id="year2"></span>)</h3>
+    <div align="center">
+        <span style="background-color: rgb(49, 130, 189); color: rgb(49, 130, 189)">__</span>Winter
+        <span style="background-color: rgb(107, 174, 214); color: rgb(107, 174, 214)">__</span>Spring
+        <span style="background-color: rgb(158, 202, 225); color: rgb(158, 202, 225)">__</span>Summer
+        <span style="background-color: rgb(198, 219, 239); color:rgb(198, 219, 239)">__</span>Fall <br />
+    </div>
     <svg width="600" height="400" id="seasonsChart">
         <g id="xAxisSeasons" transform="translate(35,370) scale(1,1)"></g>
         <g id="yAxisSeasons" transform="translate(40,20) scale(1,1)"></g>
@@ -141,13 +147,21 @@
 
 <div class="divClass">
     <h3>Flu Trends : Monthly Report (<span id="year3"></span>)</h3>
-    <svg width="600" height="400" id="monthBarChart" >
+    <svg width="600" height="415" id="monthBarChart" >
         <g id="xAxis" transform="translate(40,345) scale(1,1)"></g>
         <g id="yAxis" transform="translate(80,50) scale(1,1)"></g>
         <g id="bars" class = "monthBars" transform="translate(40,415) scale(1,-1)"></g>
     </svg>
 </div>
 
+<div class="divClass">
+    <h3>Flu Trends : Regional Report (<span id="year4"></span>)</h3>
+    <svg width="600" height="415" id="regionBarChart" >
+        <g id="xAxisRegion" transform="translate(40,345) scale(1,1)"></g>
+        <g id="yAxisRegion" transform="translate(80,50) scale(1,1)"></g>
+        <g id="regionBars" class = "monthBars" transform="translate(40,415) scale(1,-1)"></g>
+    </svg>
+</div>
 <script type="application/javascript" src="scripts/script.js"></script>
 <script>
     loadData();
