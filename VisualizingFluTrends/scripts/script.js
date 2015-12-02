@@ -185,7 +185,6 @@ function loadMonthData(error, yearData, usStateData) {
 
     updateMonthBarChart("2009");
     updateRegionBarChart("2009");
-    updatePieChart(selectedStates);
     updateDonutChart(selectedStates);
     updateStackedChart("2009", selectedStates);
     d3.select("#year1").html(selectedYear);
@@ -252,7 +251,6 @@ function drawMap() {
                     seasonsSVG.html("");
                     selectedStatesSeasonData = [];
                     updateStackedChart(selectedYear, selectedStates);
-                    updatePieChart(selectedStates);
                     updateDonutChart(selectedStates);
                 }
                 else {
@@ -266,7 +264,6 @@ function drawMap() {
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedStates);
-                updatePieChart(selectedStates);
                 updateDonutChart(selectedStates);
             }
             //alert(d["StateName"] + " was clicked");
@@ -453,7 +450,6 @@ function updateStackedChart(year, states) {
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedStates);
-                updatePieChart(selectedStates);
                 updateDonutChart(selectedStates);
             }
             else {
@@ -461,7 +457,6 @@ function updateStackedChart(year, states) {
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
-                updatePieChart(selectedCities);
                 updateDonutChart(selectedStates);
             }
         });
@@ -546,65 +541,9 @@ function updateDonutChart(states) {
         },
         donut: {title: 'Fuck you bitch!'},
         tooltip: {
-            format: {
-                value: function (value) {
-                    return value;
-                }
-            }
+            show: true
         }
     });
-}
-
-var pieChartSVG;
-function updatePieChart(states) {
-    statesData = [];
-    for (var k = 0; k < states.length; k++) {
-        var obj = {};
-        obj['state'] = states[k];
-        obj['aggregate'] = statesFluAggregate[states[k]];
-        statesData.push(obj);
-    }
-    //console.log(statesData);
-    var width = 600,
-        height = 400,
-        radius = Math.min(width, height) / 2;
-
-    var z = d3.scale.category20c();
-
-    var arc = d3.svg.arc()
-        .outerRadius(radius - 10)
-        .innerRadius(0);
-
-    var pieLayout = d3.layout.pie()
-        .sort(null)
-        .value(function (d) {
-            return d.aggregate;
-        });
-
-    pieChartSVG = d3.select("#pieChart")
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var gObj = pieChartSVG.selectAll(".arc")
-        .data(pieLayout(statesData))
-        .enter().append("g")
-        .attr("class", "arc");
-
-    gObj.append("path")
-        .attr("d", arc)
-        .style("fill", function (d, i) {
-            return z(i);
-        });
-
-    gObj.append("text")
-        .attr("transform", function (d) {
-            return "translate(" + arc.centroid(d) + ")";
-        })
-        .attr("dy", ".35em")
-        .style("text-anchor", "middle")
-        .text(function (d) {
-            return d.data.state;
-        });
 }
 
 function updateCharts(year) {
@@ -618,7 +557,6 @@ function updateCharts(year) {
     pieChartSVG.html("");
     //console.log(selectedStates);
     updateStackedChart(year, selectedStates);
-    updatePieChart(selectedStates);
     updateDonutChart(selectedStates);
     drawMap();
     d3.select("#year1").html(selectedYear);
