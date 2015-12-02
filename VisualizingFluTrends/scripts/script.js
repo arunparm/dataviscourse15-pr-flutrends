@@ -27,15 +27,15 @@ var mapData = [];
 var cities = {};
 var regions = ['R1','R2','R3','R4','R5','R6','R7','R8','R9','R10'];
 var regionStates = {R1:"CT, ME, MA, NH, RI, VT",
-               R2:"NJ, NY",
-               R3:"DE, DC, MD, PA, VA, WV",
-               R4:"AL, FL, GA, KY, MS, NC, SC, TN",
-               R5:"IL, IN, MI, MN, OH, WI",
-               R6:"AR, LA, NM, OK, TX",
-               R7:"IA, KS, MO, NE",
-               R8:"CO, MT, ND, SD, UT, WY",
-               R9:"AZ, CA, HI, NV",
-               R10:"AK, ID, OR, WA"};
+    R2:"NJ, NY",
+    R3:"DE, DC, MD, PA, VA, WV",
+    R4:"AL, FL, GA, KY, MS, NC, SC, TN",
+    R5:"IL, IN, MI, MN, OH, WI",
+    R6:"AR, LA, NM, OK, TX",
+    R7:"IA, KS, MO, NE",
+    R8:"CO, MT, ND, SD, UT, WY",
+    R9:"AZ, CA, HI, NV",
+    R10:"AK, ID, OR, WA"};
 
 var seasonsSVG;
 var pieChartSVG;
@@ -119,7 +119,7 @@ function loadData() {
                     var arr = key.split(", ");
                     var currentCities = cities[stateCodes[arr[1]]];
                     if(currentCities.indexOf(key)<0)
-                    currentCities.push(key);
+                        currentCities.push(key);
                     cities[arr[0]] = currentCities;
                 }
                 //**********************
@@ -204,11 +204,11 @@ function loadMonthData(error, yearData, usStateData) {
     }
     //console.log(statesFluAggregate);
     /*for (var k = 0; k < selectedStates.length; k++) {
-        var obj = {};
-        obj['state'] = selectedStates[k];
-        obj['aggregate'] = statesFluAggregate[selectedStates[k]];
-        statesData.push(obj);
-    }*/
+     var obj = {};
+     obj['state'] = selectedStates[k];
+     obj['aggregate'] = statesFluAggregate[selectedStates[k]];
+     statesData.push(obj);
+     }*/
 
     updateMonthBarChart("2009");
     updateRegionBarChart("2009");
@@ -271,50 +271,21 @@ function drawMap() {
                 .style("opacity", 0);
         })
         .on("click", function (d) {
-                year = document.getElementById("year").value;
-                if (this.style.fill != "white") {
-                    if(selectedStates.length<5){
-                        this.style.fill = "white";
-                        selectedStates[selectedStates.length] = d["StateName"];
-                        seasonsSVG.html("");
-                        selectedStatesSeasonData=[];
-                        updateStackedChart(selectedYear,selectedStates);
-                        updatePieChart(selectedStates);
-                        for(var i=0;i<selectedStates.length; i++){
-                            var currentSet = [];
-                            for(var j=0; j<mapData.length; j++){
-                                if(mapData[j]['StateName'] == selectedStates[i]){
-                                    console.log(mapData[j]['Value']);
-
-                                    currentSet.push(mapData[j]['StateName']);
-                                    for(var key in mapData[j]['Value']){
-                                        currentSet.push(mapData[j]['Value'][key])
-                                    }
-                                }
-                            }
-                            patternData.push(currentSet);
-                        }
-                        updatePatternChart();
-                    }
-                    else{
-                        alert("Only 5 selections are allowed. Please deselect and try again.");
-                    }
-                }
-                else {
-                    this.style.fill = colorScale(d["Value"][parseInt(year)]);
-                    var index = selectedStates.indexOf(d["StateName"]);
-                    selectedStates.splice(index, 1);
+            year = document.getElementById("year").value;
+            if (this.style.fill != "white") {
+                if(selectedStates.length<5){
+                    this.style.fill = "white";
+                    selectedStates[selectedStates.length] = d["StateName"];
                     seasonsSVG.html("");
                     selectedStatesSeasonData=[];
                     updateStackedChart(selectedYear,selectedStates);
                     updatePieChart(selectedStates);
-                    patternData=[];
-                    patternData.push(years);
                     for(var i=0;i<selectedStates.length; i++){
                         var currentSet = [];
                         for(var j=0; j<mapData.length; j++){
                             if(mapData[j]['StateName'] == selectedStates[i]){
                                 console.log(mapData[j]['Value']);
+
                                 currentSet.push(mapData[j]['StateName']);
                                 for(var key in mapData[j]['Value']){
                                     currentSet.push(mapData[j]['Value'][key])
@@ -325,6 +296,35 @@ function drawMap() {
                     }
                     updatePatternChart();
                 }
+                else{
+                    alert("Only 5 selections are allowed. Please deselect and try again.");
+                }
+            }
+            else {
+                this.style.fill = colorScale(d["Value"][parseInt(year)]);
+                var index = selectedStates.indexOf(d["StateName"]);
+                selectedStates.splice(index, 1);
+                seasonsSVG.html("");
+                selectedStatesSeasonData=[];
+                updateStackedChart(selectedYear,selectedStates);
+                updatePieChart(selectedStates);
+                patternData=[];
+                patternData.push(years);
+                for(var i=0;i<selectedStates.length; i++){
+                    var currentSet = [];
+                    for(var j=0; j<mapData.length; j++){
+                        if(mapData[j]['StateName'] == selectedStates[i]){
+                            console.log(mapData[j]['Value']);
+                            currentSet.push(mapData[j]['StateName']);
+                            for(var key in mapData[j]['Value']){
+                                currentSet.push(mapData[j]['Value'][key])
+                            }
+                        }
+                    }
+                    patternData.push(currentSet);
+                }
+                updatePatternChart();
+            }
         });
 
     map.append("g")
@@ -545,7 +545,7 @@ function getSelectedStatesSeasonData(year,states){
         tempObj ['summer'] = 0;
         tempObj ['fall'] = 0;
         selectedStatesSeasonData.push(tempObj);
-     }
+    }
 
     //console.log(seasonsData);
     for(var key in seasonsData){
