@@ -199,7 +199,7 @@ function loadMonthData(error, yearData, usStateData) {
 
     updateMonthBarChart("2009");
     updateRegionBarChart("2009");
-    updatePieChart(selectedStates);
+    updateDonutChart(selectedStates);
     updateStackedChart("2009",selectedStates);
     d3.select("#year1").html(selectedYear);
     d3.select("#year2").html(selectedYear);
@@ -271,7 +271,7 @@ function drawMap() {
                     seasonsSVG.html("");
                     selectedStatesSeasonData=[];
                     updateStackedChart(selectedYear,selectedStates);
-                    updatePieChart(selectedStates);
+                    updateDonutChart(selectedStates);
                     for(var i=0;i<selectedStates.length; i++){
                         var currentSet = [];
                         for(var j=0; j<mapData.length; j++){
@@ -299,7 +299,7 @@ function drawMap() {
                 seasonsSVG.html("");
                 selectedStatesSeasonData=[];
                 updateStackedChart(selectedYear,selectedStates);
-                updatePieChart(selectedStates);
+                updateDonutChart(selectedStates);
                 patternData=[];
                 patternData.push(years);
                 for(var i=0;i<selectedStates.length; i++){
@@ -519,14 +519,12 @@ function updateStackedChart(year, states){
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedStates);
-                updateDonutChart(selectedStates);
             }
             else {
                 selectedCities = cities[d['x']];
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
-                updateDonutChart(selectedStates);
             }
         });
 
@@ -612,7 +610,7 @@ function updateDonutChart(states) {
         legend: {
             position: 'right'
         },
-        donut: {title: 'Fuck you bitch!'},
+        donut: {title: 'Flu Percentage'},
         tooltip: {
             show: true,
             contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
@@ -633,7 +631,6 @@ function updateCharts(year) {
     seasonsSVG.html("");
     //console.log(selectedStates);
     updateStackedChart(year, selectedStates);
-    updateDonutChart(selectedStates);
     drawMap();
     d3.select("#year2").html(selectedYear);
     d3.select("#year3").html(selectedYear);
@@ -718,12 +715,56 @@ function updateRegionBarChart(year) {
         .attr("height", function (d, i) {
             return yScaleInverted(d);
         })
-        .attr("width", 25);
+        .attr("width", 25)
+        .on("mouseover",function(d,i){
+            d3.select("#tooltip")
+                .transition()
+                .duration(200)
+                .style("opacity", .9);
+
+            d3.select("#tooltip")
+                .html(regionStates[regions[i]])
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function (d) {
+            d3.select("#tooltip")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 
     bars
         .exit()
         .remove();
 }
+
+function updatePatternChart(){
+    var chart = c3.generate({
+        size: {
+            width: 550
+        },
+        bindto: '#patternChart',
+        data: {
+            x: 'year',
+            columns: patternData
+        },
+        axis : {
+            x : {
+                tick: {
+                    format: function (x) { return x }
+                }
+            },
+            y : {
+                tick: {
+                    format: d3.format(".2s")
+                }
+            }
+
+        }
+    });
+}
+
 
 
 
