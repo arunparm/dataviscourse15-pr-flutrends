@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdb6b9bd-dcbc-4484-b096-406049c44539" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/script.js" afterPath="$PROJECT_DIR$/scripts/script.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -25,14 +24,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="script.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="script.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/script.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36408567">
-              <caret line="573" column="0" selection-start-line="573" selection-start-column="0" selection-end-line="573" selection-end-column="0" />
+            <state vertical-scroll-proportion="-10.620689">
+              <caret line="457" column="0" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
               <folding>
                 <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-                <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
                 <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
               </folding>
             </state>
@@ -49,11 +47,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.269231">
-              <caret line="142" column="30" selection-start-line="142" selection-start-column="30" selection-end-line="142" selection-end-column="30" />
+            <state vertical-scroll-proportion="-0.86230636">
+              <caret line="112" column="39" selection-start-line="112" selection-start-column="37" selection-end-line="112" selection-end-column="39" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -310,7 +308,13 @@
       <option name="project" value="LOCAL" />
       <updated>1449030822196</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Minor modifications">
+      <created>1449089119554</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1449089119554</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -377,7 +381,8 @@
     <MESSAGE value="Region Chart" />
     <MESSAGE value="Donut Chart added" />
     <MESSAGE value="Replaced pie chart with donut chart" />
-    <option name="LAST_COMMIT_MESSAGE" value="Replaced pie chart with donut chart" />
+    <MESSAGE value="Minor modifications" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor modifications" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -425,7 +430,6 @@
           <caret line="332" column="14" selection-start-line="332" selection-start-column="14" selection-end-line="332" selection-end-column="14" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -473,7 +477,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -498,7 +501,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -523,7 +525,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -548,7 +549,6 @@
           <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -573,32 +573,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
-            <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#2;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#3;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -623,7 +597,30 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
+            <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#2;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#3;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/script.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -648,7 +645,6 @@
           <caret line="147" column="1" selection-start-line="147" selection-start-column="1" selection-end-line="147" selection-end-column="1" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -673,7 +669,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -698,7 +693,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -736,7 +730,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -761,7 +754,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -786,7 +778,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -811,7 +802,6 @@
           <caret line="40" column="30" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -836,7 +826,6 @@
           <caret line="19" column="25" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -861,7 +850,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -886,7 +874,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
             <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
@@ -949,27 +936,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/script.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.620689">
+          <caret line="457" column="0" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
+            <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.269231">
-          <caret line="142" column="30" selection-start-line="142" selection-start-column="30" selection-end-line="142" selection-end-column="30" />
+        <state vertical-scroll-proportion="-0.86230636">
+          <caret line="112" column="39" selection-start-line="112" selection-start-column="37" selection-end-line="112" selection-end-column="39" />
           <folding>
             <element signature="n#style#0;n#span#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#2;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#3;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36408567">
-          <caret line="573" column="0" selection-start-line="573" selection-start-column="0" selection-end-line="573" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#updateMonthBarChart#0" expanded="false" />
-            <element signature="n#!!block;n#updateStackedChart#0" expanded="false" />
-            <element signature="n#!!block;n#getSelectedStatesSeasonData#0" expanded="false" />
           </folding>
         </state>
       </provider>

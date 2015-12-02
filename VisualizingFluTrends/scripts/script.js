@@ -455,14 +455,12 @@ function updateStackedChart(year, states) {
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedStates);
-                updateDonutChart(selectedStates);
             }
             else {
                 selectedCities = cities[d['x']];
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
-                updateDonutChart(selectedStates);
             }
         });
 
