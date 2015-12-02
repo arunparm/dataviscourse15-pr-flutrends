@@ -39,7 +39,7 @@ var regionStates = {R1:"CT, ME, MA, NH, RI, VT",
 
 var seasonsSVG;
 var pieChartSVG;
-var years = ['year','2004-01-01','2005-01-01','2006-01-01','2007-01-01','2008-01-01','2009-01-01', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01'];
+var years = ['year','2004','2005','2006','2007','2008','2009', '2010', '2011', '2012', '2013', '2014'];
 var patternData = [];
 
 function loadData() {
@@ -784,6 +784,9 @@ function updateRegionBarChart(year) {
 
 function updatePatternChart(){
     var chart = c3.generate({
+        size: {
+            width: 550
+        },
         bindto: '#patternChart',
         data: {
             x: 'year',
@@ -791,11 +794,16 @@ function updatePatternChart(){
         },
         axis : {
             x : {
-                type : 'timeseries',
                 tick: {
-                    format: function (x) { return x.getFullYear(); }
+                    format: function (x) { return x }
+                }
+            },
+            y : {
+                tick: {
+                    format: d3.format(".2s")
                 }
             }
+
         }
     });
 }
@@ -818,7 +826,6 @@ function updateCharts(year) {
     d3.select("#year3").html(selectedYear);
     d3.select("#year4").html(selectedYear);
 }
-
 
 
 
