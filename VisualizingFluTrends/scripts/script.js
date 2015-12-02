@@ -220,9 +220,14 @@ function drawMap() {
         .attr("stroke", "white")
         .attr("class", "states")
         .style("fill", function (d) {
-            year = document.getElementById("year").value;
-            if (d["Value"] != undefined)
-                return colorScale(d["Value"][parseInt(year)]);
+            if (selectedStates.indexOf(d["StateName"]) < 0) {
+                year = document.getElementById("year").value;
+                if (d["Value"] != undefined)
+                    return colorScale(d["Value"][parseInt(year)]);
+            }
+            else {
+                return 'white';
+            }
         })
         .on("mouseover", function (d) {
             year = document.getElementById("year").value;
@@ -519,6 +524,7 @@ function getSelectedStatesSeasonData(year, states) {
 
 function updateDonutChart(states) {
     statesData = [];
+    console.log(statesFluAggregate);
     for (var k = 0; k < states.length; k++) {
         var obj = [];
         obj[0] = states[k];
@@ -530,18 +536,25 @@ function updateDonutChart(states) {
         data: {
             bindto: '#chart',
             columns: statesData,
-            type: 'donut'
-            /*,
-             onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-             onclick: function (d, i) { console.log("onclick", d, i); },
-             onmouseout: function (d, i) { console.log("onmouseout", d, i); }*/
+            type: 'donut',
+            onmouseover: function (d, i) {
+                console.log("onmouseover", d, i);
+            },
+            onmouseout: function (d, i) {
+                console.log("onmouseout", d, i);
+            }/*,
+             onclick: function (d, i) { console.log("onclick", d, i); }*/
         },
         legend: {
             position: 'right'
         },
         donut: {title: 'Fuck you bitch!'},
         tooltip: {
-            show: true
+            show: true,
+            contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                var htmlFormat = "<h4>" + d + "</h4>";
+                return htmlFormat;
+            }
         }
     });
 }
@@ -554,12 +567,10 @@ function updateCharts(year) {
     selectedStatesSeasonData = [];
     statesData = [];
     seasonsSVG.html("");
-    pieChartSVG.html("");
     //console.log(selectedStates);
     updateStackedChart(year, selectedStates);
     updateDonutChart(selectedStates);
     drawMap();
-    d3.select("#year1").html(selectedYear);
     d3.select("#year2").html(selectedYear);
     d3.select("#year3").html(selectedYear);
     d3.select("#year4").html(selectedYear);
