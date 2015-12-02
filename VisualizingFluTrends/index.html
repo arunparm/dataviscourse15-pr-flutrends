@@ -6,26 +6,29 @@
     <title>Flu Trends</title>
 
     <style>
-        body{
-            background-color: rgb(169,169,169);
+        body {
+            background-color: rgb(169, 169, 169);
         }
-        h3{
+
+        h3 {
             font-family: "Arial Black", Gadget, sans-serif;
             color: black;
         }
 
-        h2{
+        h2 {
             font-family: "Arial Black", Gadget, sans-serif;
             color: black;
         }
-        .divClass{
-            background-color: rgb(220,220,220);
+
+        .divClass {
+            background-color: rgb(220, 220, 220);
             display: inline-block;
             border: 1px solid lightgray;
             margin: 10px;
         }
-        .monthBars{
-            fill :rgb(49,130,189);
+
+        .monthBars {
+            fill: rgb(49, 130, 189);
         }
 
         .arc path {
@@ -48,35 +51,41 @@
             border-radius: 2px;
             pointer-events: none;
         }
-        #tooltip h4{
-            margin:0;
-            font-size:14px;
-        }
-        #tooltip{
-            background:rgba(0,0,0,0.9);
-            border:1px solid grey;
-            border-radius:5px;
-            font-size:12px;
-            width:auto;
-            padding:4px;
-            color:white;
-            opacity:0;
-        }
-        #tooltip table{
-            table-layout: fixed;
-        }
-        #tooltip tr td{
-            padding:0;
-            margin:0;
-        }
-        #tooltip tr td:nth-child(1){
-            width:70px;
-        }
-        #tooltip tr td:nth-child(2){
-            text-align:center;
+
+        #tooltip h4 {
+            margin: 0;
+            font-size: 14px;
         }
 
-        .state{
+        #tooltip {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid grey;
+            border-radius: 5px;
+            font-size: 12px;
+            width: auto;
+            padding: 4px;
+            color: white;
+            opacity: 0;
+        }
+
+        #tooltip table {
+            table-layout: fixed;
+        }
+
+        #tooltip tr td {
+            padding: 0;
+            margin: 0;
+        }
+
+        #tooltip tr td:nth-child(1) {
+            width: 70px;
+        }
+
+        #tooltip tr td:nth-child(2) {
+            text-align: center;
+        }
+
+        .state {
             fill: none;
             stroke: #a9a9a9;
             stroke-width: 1;
@@ -104,6 +113,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="scripts/map.js"></script>
+    <!--<script type="text/javascript" src="Libraries/c3.js"></script>
+    <script type="text/javascript" src="Libraries/c3.css"></script>-->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/c3/0.1.29/c3.css" rel="stylesheet" type="text/css">
 </head>
 
 
@@ -115,9 +128,11 @@
 <h2 align="center">United States flu trends (2004 - 2014)</h2>
 <br/>
 <input id="year" type="range" min="2004" max="2014" oninput="updateCharts(value)"><span id="yearSpan">2009</span>
-<br />
+<br/>
+
 <div class="divClass">
     <h3>Flu Trends Map</h3>
+
     <div id="tooltip"></div>
     <svg width="600" height="415" id="map">
 
@@ -126,17 +141,18 @@
 
 <div class="divClass">
     <h3>Flu Trends : Aggregate (<span id="year1"></span>)</h3>
-    <svg  width="600" height="415" id="pieChart" >
+    <svg width="600" height="415" id="pieChart">
     </svg>
 </div>
 
 <div class="divClass">
     <h3>Flu Trends : Season (<span id="year2"></span>)</h3>
+
     <div align="center">
         <span style="background-color: rgb(49, 130, 189); color: rgb(49, 130, 189)">__</span>Winter
         <span style="background-color: rgb(107, 174, 214); color: rgb(107, 174, 214)">__</span>Spring
         <span style="background-color: rgb(158, 202, 225); color: rgb(158, 202, 225)">__</span>Summer
-        <span style="background-color: rgb(198, 219, 239); color:rgb(198, 219, 239)">__</span>Fall <br />
+        <span style="background-color: rgb(198, 219, 239); color:rgb(198, 219, 239)">__</span>Fall <br/>
     </div>
     <svg width="600" height="400" id="seasonsChart">
         <g id="xAxisSeasons" transform="translate(35,370) scale(1,1)"></g>
@@ -147,20 +163,25 @@
 
 <div class="divClass">
     <h3>Flu Trends : Monthly Report (<span id="year3"></span>)</h3>
-    <svg width="600" height="415" id="monthBarChart" >
+    <svg width="600" height="415" id="monthBarChart">
         <g id="xAxis" transform="translate(40,345) scale(1,1)"></g>
         <g id="yAxis" transform="translate(80,50) scale(1,1)"></g>
-        <g id="bars" class = "monthBars" transform="translate(40,415) scale(1,-1)"></g>
+        <g id="bars" class="monthBars" transform="translate(40,415) scale(1,-1)"></g>
     </svg>
 </div>
 
 <div class="divClass">
     <h3>Flu Trends : Regional Report (<span id="year4"></span>)</h3>
-    <svg width="600" height="415" id="regionBarChart" >
+    <svg width="600" height="415" id="regionBarChart">
         <g id="xAxisRegion" transform="translate(40,345) scale(1,1)"></g>
         <g id="yAxisRegion" transform="translate(80,50) scale(1,1)"></g>
-        <g id="regionBars" class = "monthBars" transform="translate(40,415) scale(1,-1)"></g>
+        <g id="regionBars" class="monthBars" transform="translate(40,415) scale(1,-1)"></g>
     </svg>
+</div>
+
+<div class="divClass">
+    <h3>Flu Trends : Aggregate(<span id="year5"></span>)</h3>
+    <svg width="600" height="415" id="chart"></svg>
 </div>
 <script type="application/javascript" src="scripts/script.js"></script>
 <script>
