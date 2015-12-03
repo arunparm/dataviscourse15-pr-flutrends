@@ -522,6 +522,9 @@ function updateStackedChart(year, states){
             }
             else {
                 selectedCities = cities[d['x']];
+                if(selectedCities.length>5){
+                    selectedCities.splice(5,selectedCities.length-5);
+                }
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
@@ -760,8 +763,7 @@ function updatePatternChart(){
                     format: d3.format(".2s")
                 }
             }
-
-        }
+        },
     });
 }
 
