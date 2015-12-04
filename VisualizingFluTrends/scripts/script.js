@@ -529,15 +529,20 @@ function updateStackedChart(year, states) {
             }
             else {
                 selectedCities = cities[d['x']];
+                if (selectedCities.length < 1) {
+                    alert("No data for the cities of " + d['x']);
+                    return;
+                }
                 if (selectedCities.length > 5) {
                     selectedCities.splice(5, selectedCities.length - 5);
                 }
                 seasonsSVG.html("");
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
+
             }
         })
-        .on("mouseover", function(d) {
+        .on("mouseover", function (d) {
             d3.select("#tooltip")
                 .transition()
                 .duration(200)
@@ -642,10 +647,10 @@ function updateDonutChart(states) {
         },
         donut: {title: 'Flu Percentage'},
         tooltip: {
-            show: true,
-            contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                var htmlFormat = "<h4>" + d + "</h4>";
-                return htmlFormat;
+            format: {
+                value: function (value) {
+                    return value;
+                }
             }
         }
     });
