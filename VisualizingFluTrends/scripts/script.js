@@ -536,6 +536,23 @@ function updateStackedChart(year, states) {
                 selectedStatesSeasonData = [];
                 updateStackedChart(selectedYear, selectedCities);
             }
+        })
+        .on("mouseover", function(d) {
+            d3.select("#tooltip")
+                .transition()
+                .duration(200)
+                .style("opacity", .9);
+
+            d3.select("#tooltip")
+                .html("Flu cases: " + d.y)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function (d) {
+            d3.select("#tooltip")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
         });
 
 
