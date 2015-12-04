@@ -1,6 +1,9 @@
 Primary features: 
+
 -Map view is used to select states on a mouse click.
+
 -Slider is used to select year.
+
 -Bars on Season's view are clickable. Click event transforms States to Cities and vice versa.
 
 
