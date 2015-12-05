@@ -212,11 +212,20 @@ function loadMonthData(error, yearData, usStateData) {
 }
 
 function drawMap() {
+    max = 0;
+    min = 99999999;
+    year = document.getElementById("year").value;
+    mapData.forEach(function (key) {
+        if (key["Value"][year] > max) {
+            max = key["Value"][year];
+        }
+        if (key["StateName"] != "Puerto Rico" && key["StateName"] != "Virgin Islands of the United States" && key["Value"][year] < min) {
+            min = key["Value"][year];
+        }
+    });
+
     colorScale = d3.scale.ordinal()
-        .domain(mapData, function (d) {
-            year = document.getElementById("year").value;
-            return d["Value"][parseInt(year)];
-        })
+        .domain([min, max])
         .range(["rgb(49,130,189)", "rgb(158, 202, 225)"]);
 
     var map = d3.select("#map");
@@ -227,7 +236,12 @@ function drawMap() {
     var path = d3.geo.path().projection(projection);
 
     map.html("");
+    console.log(mapData);
 
+    var diff = (max - min) / 4;
+    var colors = ["rgb(198, 219, 239)", "rgb(158, 202, 225)", "rgb(107, 174, 214)", "rgb(49,130,189)"];
+
+    console.log(max + " " + min);
     map.append("g")
         .selectAll("path")
         .data(mapData)
@@ -239,8 +253,7 @@ function drawMap() {
         .style("fill", function (d) {
             if (selectedStates.indexOf(d["StateName"]) < 0) {
                 year = document.getElementById("year").value;
-                if (d["Value"] != undefined)
-                    return colorScale(d["Value"][parseInt(year)]);
+                return colorScale(d["Value"][parseInt(year)]);
             }
             else {
                 return 'white';
