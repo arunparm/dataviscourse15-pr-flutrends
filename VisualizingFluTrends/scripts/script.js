@@ -240,7 +240,7 @@ function drawMap() {
     var states = d3.selectAll("#states");
     var projection = d3.geo.albersUsa()
         .scale(800)
-        .translate([300, 200]);
+        .translate([300, 180]);
     var path = d3.geo.path().projection(projection);
 
     map.html("");
